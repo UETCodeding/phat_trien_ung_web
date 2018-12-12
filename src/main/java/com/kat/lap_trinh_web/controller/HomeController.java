@@ -38,7 +38,7 @@ public class HomeController implements Serializable {
         if(authorityController.getLoggedUser() == null){
             FacesContext.getCurrentInstance().getExternalContext().dispatch("/login");
         }else{
-            FacesContext.getCurrentInstance().getExternalContext().dispatch("/main");
+            FacesContext.getCurrentInstance().getExternalContext().dispatch("/testExcel");
         }
     }
 

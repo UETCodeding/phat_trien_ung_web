@@ -1,39 +1,59 @@
 package com.kat.lap_trinh_web.controller;
 import com.kat.lap_trinh_web.common.constant.MessageErrorConst;
 import com.kat.lap_trinh_web.common.model.UserDto;
+import com.kat.lap_trinh_web.common.model.UserEntity;
 import com.kat.lap_trinh_web.common.util.DateValidator;
 import com.kat.lap_trinh_web.common.util.EmailValidator;
+import com.kat.lap_trinh_web.common.util.FileUtil;
 import com.kat.lap_trinh_web.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
+//import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
-import javax.faces.view.ViewScoped;
-import java.io.Serializable;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
-@Named("lecturers")
-@ViewScoped
-public class UserActionController  implements Serializable {
+@Named("user")
+@RestController
+@RequestMapping
+public class UserActionController  extends MessageErrorConst {
     UserDto userDto;
     UserDto userRequestDto;
     List<UserDto> lecturersDtoList;
+    List<UserDto> studentDtoList;
+    List<UserDto> list;
     String idRequest;
+    ServletContext servletContext;
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    ServletContext context;
+
     @PostConstruct
-    public void init() {}
+    public void init() {
+        studentDtoList = findAllStudent();
+    }
 
     public List<UserDto> findAllLecturers(){
         return this.lecturersDtoList = userService.findAllLecturers();
     }
 
     public List<UserDto> findAllStudent(){
-        return this.lecturersDtoList = userService.findAllStudent();
+        return this.studentDtoList = userService.findAllStudent();
     }
 
     public UserDto findById(int id){
@@ -54,21 +74,51 @@ public class UserActionController  implements Serializable {
             }
         }
     }
-    public void displayEmptyError(String componentId){
-        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("displayError('main\\\\:" + componentId + "', 'Can not be empty!')");
+
+    @Description("import list students by file excel")
+    @PostMapping(value = "/studentExcel")
+    public String importStudentExcel(@RequestParam("file") MultipartFile file) {
+        FileUtil fileUtil = new FileUtil();
+        this.list = userService.findAll();
+        int size = list.size();
+        // Student.Permission = 2
+        List<UserEntity> list = fileUtil.ExcelHelper(file,size,2);
+        for(int i=0;i<list.size();i++){
+            userService.save(list.get(i));
+        }
+        return "test import student excel";
     }
 
-    public void displayError(String componentId, String message){
-        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("displayError('main\\\\:" + componentId + "', '" + message + "')");
+    @Description("import list lecturers by file excel")
+    @RequestMapping(value = "/lecturersExcel",method = RequestMethod.POST)
+    public String importLecturersExcel(@RequestParam("file") MultipartFile file) {
+        FileUtil fileUtil = new FileUtil();
+        this.list = userService.findAll();
+        int size = list.size();
+        // Lecturers.Permission = 3
+        List<UserEntity> list = fileUtil.ExcelHelper(file,size,3);
+        for(int i=0;i<list.size();i++){
+            userService.save(list.get(i));
+        }
+        return "test import lecturers excel";
     }
 
-    public void hiddenError(String componentId){
-        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("hiddenError('main\\\\:"+componentId +"')");
+    //dowload file or save file on local
+    private String saveExcelFile(MultipartFile file){
+        try {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(servletContext.getRealPath("/resources/excels" +file));
+            Files.write(path,bytes);
+            return file.getOriginalFilename();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
+    //Check validate
     private boolean validate() {
         boolean isValid = true;
-
-
         if(userRequestDto.getEmail() == null || userRequestDto.getEmail().equals("")) {
             isValid = false;
             displayEmptyError("txtUserEmail");
@@ -136,11 +186,27 @@ public class UserActionController  implements Serializable {
         this.lecturersDtoList = lecturersDtoList;
     }
 
+    public List<UserDto> getList() {
+        return list;
+    }
+
+    public void setList(List<UserDto> list) {
+        this.list = list;
+    }
+
     public String getIdRequest() {
         return idRequest;
     }
 
     public void setIdRequest(String idRequest) {
         this.idRequest = idRequest;
+    }
+
+    public List<UserDto> getStudentDtoList() {
+        return studentDtoList;
+    }
+
+    public void setStudentDtoList(List<UserDto> studentDtoList) {
+        this.studentDtoList = studentDtoList;
     }
 }

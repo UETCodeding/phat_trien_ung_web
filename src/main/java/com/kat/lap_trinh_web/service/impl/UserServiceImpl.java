@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             userDto.setStatus(result.getStatus());
             userDto.setUserType(result.getPermission());
             userDto.setTraining(result.getTraining());
-            userDto.setCode(result.getCode());
+//            userDto.setCode(result.getCode());
             userDto.setPassword(result.getPassword());
         } else {
             userDto = null;
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
             userDto.setStatus(result.getStatus());
             userDto.setUserType(result.getPermission());
             userDto.setTraining(result.getTraining());
-            userDto.setCode(result.getCode());
+//            userDto.setCode(result.getCode());
             userDto.setPassword(result.getPassword());
         } else {
             userDto = null;
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
             userDto.setStatus(result.getStatus());
             userDto.setUserType(result.getPermission());
             userDto.setTraining(result.getTraining());
-            userDto.setCode(result.getCode());
+//            userDto.setCode(result.getCode());
             userDto.setPassword(result.getPassword());
         } else {
             userDto = null;
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         }
         savingObj.setUsername(userDto.getUserName());
         savingObj.setPermission(userDto.getUserType());
-        savingObj.setCode(userDto.getCode());
+//        savingObj.setCode(userDto.getCode());
         savingObj.setStatus(userDto.getStatus());
         savingObj.setName(userDto.getFullName());
         savingObj.setCreatedDate(DateUtil.getCurrentDayTS());
@@ -123,6 +123,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void save(UserEntity userEntity) {
+//        if(userEntity == null){
+//            userEntity = new UserEntity();
+//            userEntity.setId(userDto.getUserId());
+//        }
+//        userEntity.setUsername(userDto.getUserName());
+//        userEntity.setPermission(userDto.getUserType());
+//        userEntity.setCode(userDto.getCode());
+//        userEntity.setStatus(userDto.getStatus());
+//        userEntity.setName(userDto.getFullName());
+//        userEntity.setCreatedDate(DateUtil.getCurrentDayTS());
+//        userEntity.setBirthDay(userDto.getBirthday());
+//        userEntity.setEmail(userDto.getEmail());
+//        if(!CommonUtil.isNull(userDto.getPassword())){
+//            savingObj.setPassword(PasswordUtil.hashMD5(userDto.getPassword()));
+//        }
+//        if(userDto.getUserType()==2){
+//            savingObj.setTraining(userDto.getTraining());
+//        }
+        userRepo.save(userEntity);
+    }
+
+
+    @Override
     public void delete(Integer userId) {
         UserEntity deletingObj = userRepo.findById(userId);
         userRepo.delete(deletingObj);
@@ -130,11 +154,11 @@ public class UserServiceImpl implements UserService {
 
     private UserDto TsUser2UserDto(UserEntity input){
         UserDto map = modelMapper.map(input, UserDto.class);
-        map.setStatus(input.getStatus());
+//        map.setStatus((int) input.getStatus());
         map.setUserName(input.getUsername());
-        map.setUserId(input.getId());
+        map.setUserId((int) input.getId());
         map.setFullName(input.getName());
-        map.setUserType(input.getPermission());
+//        map.setUserType(input.getPermission());
         map.setEmail(input.getEmail());
         map.setTraining(input.getTraining());
         map.setBirthday(input.getBirthDay());

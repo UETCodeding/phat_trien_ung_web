@@ -10,14 +10,14 @@ public class UserDto implements Serializable {
     private String password;
     private int userType;
     private int status;
-    private String code;
+    private int code;
     private Date birthday;
     private String training;
     private String email;
     public UserDto() {
     }
 
-    public UserDto(int userId, String userName, String fullName, String password, int userType, int status, String code, Date birthday, String email, String training) {
+    public UserDto(int userId, String userName, String fullName, String password, int userType, int status, int code, Date birthday, String email, String training) {
         this.userId = userId;
         this.userName = userName;
         this.fullName = fullName;
@@ -83,11 +83,11 @@ public class UserDto implements Serializable {
         this.fullName = fullName;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

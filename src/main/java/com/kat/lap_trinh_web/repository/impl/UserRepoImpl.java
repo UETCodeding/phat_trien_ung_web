@@ -50,7 +50,7 @@ public class UserRepoImpl implements UserRepo {
         CriteriaQuery<UserEntity> criteriaQuery = builder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.isNotNull(root.get(UserEntity_.id)));
+        predicates.add(builder.isNotNull(root.get(UserEntity_.code)));
         criteriaQuery.select(root).where(predicates.stream().toArray(Predicate[]::new));
         final TypedQuery<UserEntity> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();

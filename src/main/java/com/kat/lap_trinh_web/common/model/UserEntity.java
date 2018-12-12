@@ -6,31 +6,49 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "public")
 public class UserEntity implements Serializable {
-    private String code;
+    @Id
+    private int code;
+
     private Timestamp createdDate;
-    private java.util.Date date;
+    private java.util.Date birthday;
     private Timestamp lastModified;
     private String name;
     private String password;
-    private Integer permission;
+    private int permission;
     private String training;
     private Boolean isPublished;
-    private Integer status;
+    private int status;
     private String username;
     private String email;
     private int id;
 
-    @Basic
-    @Column(name = "code")
-    public String getCode() {
-        return code;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "class_member", joinColumns = @JoinColumn(name = "member_code", referencedColumnName = "code"), inverseJoinColumns = @JoinColumn(name = "class_code", referencedColumnName = "classCode"))
+    private Set<ClassRoomEntity> classRoomEntities;
+
+    public UserEntity(){}
+
+    public UserEntity(String name){
+        this.name = name;
     }
 
-    public void setCode(String code) {
+    public UserEntity(String name, Set<ClassRoomEntity> classRoomEntities){
+        this.name = name;
+        this.classRoomEntities=classRoomEntities;
+    }
+
+//    @Id
+//    @Column(name = "code")
+//    public int getCode() {
+//        return code;
+//    }
+//
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -47,11 +65,11 @@ public class UserEntity implements Serializable {
     @Basic
     @Column(name = "birthday")
     public java.util.Date getBirthDay() {
-        return date;
+        return birthday;
     }
 
     public void setBirthDay(Date date) {
-        this.date = date;
+        this.birthday = date;
     }
 
     @Basic
@@ -86,11 +104,11 @@ public class UserEntity implements Serializable {
 
     @Basic
     @Column(name = "permission")
-    public Integer getPermission() {
+    public int getPermission() {
         return permission;
     }
 
-    public void setPermission(Integer permission) {
+    public void setPermission(int permission) {
         this.permission = permission;
     }
 
@@ -116,15 +134,15 @@ public class UserEntity implements Serializable {
 
     @Basic
     @Column(name = "status")
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    @Id
+    @Basic
     @Column(name = "username")
     public String getUsername() {
         return username;
@@ -144,7 +162,15 @@ public class UserEntity implements Serializable {
         this.email = email;
     }
 
-    @Id
+//    public Set<ClassRoomEntity> getClassRoomEntities() {
+//        return classRoomEntities;
+//    }
+//
+//    public void setClassRoomEntities(Set<ClassRoomEntity> classRoomEntities) {
+//        this.classRoomEntities = classRoomEntities;
+//    }
+
+    @Basic
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {
@@ -163,35 +189,34 @@ public class UserEntity implements Serializable {
         UserEntity that = (UserEntity) o;
 
         if (id != that.id) return false;
-        if (code != null ? !code.equals(that.code) : that.code != null) return false;
+        if (code != that.code) return false;
+        if (permission != that.permission) return false;
+        if (status != that.status) return false;
         if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+        if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null) return false;
         if (lastModified != null ? !lastModified.equals(that.lastModified) : that.lastModified != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (permission != null ? !permission.equals(that.permission) : that.permission != null) return false;
         if (training != null ? !training.equals(that.training) : that.training != null) return false;
         if (isPublished != null ? !isPublished.equals(that.isPublished) : that.isPublished != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null)
-            return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = code != null ? code.hashCode() : 0;
+        int result = code ;
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (lastModified != null ? lastModified.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (permission != null ? permission.hashCode() : 0);
+        result = 31 * result + permission;
         result = 31 * result + (training != null ? training.hashCode() : 0);
         result = 31 * result + (isPublished != null ? isPublished.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + status;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + id;
