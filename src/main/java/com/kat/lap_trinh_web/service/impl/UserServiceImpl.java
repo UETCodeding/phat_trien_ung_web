@@ -43,19 +43,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findById(int id){
         UserEntity result = userRepo.findById(id);
         UserDto userDto = new UserDto();
-        if(result != null) {
-            userDto.setFullName(result.getName());
-            userDto.setEmail(result.getEmail());
-            userDto.setBirthday(result.getBirthDay());
-            userDto.setUserId(result.getId());
-            userDto.setStatus(result.getStatus());
-            userDto.setUserType(result.getPermission());
-            userDto.setTraining(result.getTraining());
-//            userDto.setCode(result.getCode());
-            userDto.setPassword(result.getPassword());
-        } else {
-            userDto = null;
-        }
+        userDto = TsUser2UserDto(result);
         return userDto;
     }
     @Override
@@ -70,7 +58,7 @@ public class UserServiceImpl implements UserService {
             userDto.setStatus(result.getStatus());
             userDto.setUserType(result.getPermission());
             userDto.setTraining(result.getTraining());
-//            userDto.setCode(result.getCode());
+            userDto.setCode(result.getCode());
             userDto.setPassword(result.getPassword());
         } else {
             userDto = null;
@@ -107,12 +95,13 @@ public class UserServiceImpl implements UserService {
         }
         savingObj.setUsername(userDto.getUserName());
         savingObj.setPermission(userDto.getUserType());
-//        savingObj.setCode(userDto.getCode());
+        savingObj.setCode(userDto.getCode());
         savingObj.setStatus(userDto.getStatus());
         savingObj.setName(userDto.getFullName());
         savingObj.setCreatedDate(DateUtil.getCurrentDayTS());
         savingObj.setBirthDay(userDto.getBirthday());
         savingObj.setEmail(userDto.getEmail());
+        savingObj.setPermission(userDto.getUserType());
         if(!CommonUtil.isNull(userDto.getPassword())){
             savingObj.setPassword(PasswordUtil.hashMD5(userDto.getPassword()));
         }
@@ -123,25 +112,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void add(UserDto userDto) {
+        UserEntity savingObj = userRepo.findById(userDto.getUserId());
+        if(savingObj == null){
+            savingObj = new UserEntity();
+            savingObj.setId(userDto.getUserId());
+        }
+        savingObj.setUsername(""+userDto.getCode());
+        savingObj.setPermission(userDto.getUserType());
+        savingObj.setCode(userDto.getCode());
+        savingObj.setStatus(userDto.getStatus());
+        savingObj.setName(userDto.getFullName());
+        savingObj.setCreatedDate(DateUtil.getCurrentDayTS());
+        savingObj.setBirthDay(userDto.getBirthday());
+        savingObj.setEmail(userDto.getEmail());
+        savingObj.setPermission(userDto.getUserType());
+        if(!CommonUtil.isNull(userDto.getPassword())){
+            savingObj.setPassword(PasswordUtil.hashMD5(userDto.getPassword()));
+        }
+        if(userDto.getUserType()==2){
+            savingObj.setTraining(userDto.getTraining());
+        }
+        userRepo.add(savingObj);
+    }
+
+    @Override
     public void save(UserEntity userEntity) {
-//        if(userEntity == null){
-//            userEntity = new UserEntity();
-//            userEntity.setId(userDto.getUserId());
-//        }
-//        userEntity.setUsername(userDto.getUserName());
-//        userEntity.setPermission(userDto.getUserType());
-//        userEntity.setCode(userDto.getCode());
-//        userEntity.setStatus(userDto.getStatus());
-//        userEntity.setName(userDto.getFullName());
-//        userEntity.setCreatedDate(DateUtil.getCurrentDayTS());
-//        userEntity.setBirthDay(userDto.getBirthday());
-//        userEntity.setEmail(userDto.getEmail());
-//        if(!CommonUtil.isNull(userDto.getPassword())){
-//            savingObj.setPassword(PasswordUtil.hashMD5(userDto.getPassword()));
-//        }
-//        if(userDto.getUserType()==2){
-//            savingObj.setTraining(userDto.getTraining());
-//        }
         userRepo.save(userEntity);
     }
 
@@ -157,6 +153,7 @@ public class UserServiceImpl implements UserService {
 //        map.setStatus((int) input.getStatus());
         map.setUserName(input.getUsername());
         map.setUserId((int) input.getId());
+        map.setCode((int) input.getCode());
         map.setFullName(input.getName());
 //        map.setUserType(input.getPermission());
         map.setEmail(input.getEmail());

@@ -14,6 +14,7 @@ public class UserDto implements Serializable {
     private Date birthday;
     private String training;
     private String email;
+    private String sex;
     public UserDto() {
     }
 
@@ -116,5 +117,13 @@ public class UserDto implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

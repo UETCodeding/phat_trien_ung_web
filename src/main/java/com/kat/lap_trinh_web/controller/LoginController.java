@@ -19,9 +19,13 @@ public class LoginController implements Serializable {
 
     private String txtUsername, txtPassword;
     private boolean remember;
+    private int role = 10;
 
     @Inject
     AuthorityController authorityController;
+
+    @Inject
+    SessionController sessionController;
 
     @Autowired AuthorityService authorityService;
 
@@ -31,8 +35,10 @@ public class LoginController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authenticate error!", "Wrong password."));
         }else{
             authorityController.setLoggedUser(loggedUser);
+            sessionController.sessionAndCookie(getTxtUsername());
+            role=loggedUser.getUserType();
             FacesContext.getCurrentInstance().getExternalContext().redirect("/");
-            FacesContext.getCurrentInstance().getExternalContext().dispatch("/main");
+//            FacesContext.getCurrentInstance().getExternalContext().dispatch("/all_Servey");
         }
     }
 
@@ -70,5 +76,13 @@ public class LoginController implements Serializable {
 
     public void setRemember(boolean remember) {
         this.remember = remember;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 }

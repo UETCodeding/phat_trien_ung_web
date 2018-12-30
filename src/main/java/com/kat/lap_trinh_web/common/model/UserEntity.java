@@ -42,12 +42,12 @@ public class UserEntity implements Serializable {
         this.classRoomEntities=classRoomEntities;
     }
 
-//    @Id
-//    @Column(name = "code")
-//    public int getCode() {
-//        return code;
-//    }
-//
+    @Id
+    @Column(name = "code")
+    public int getCode() {
+        return code;
+    }
+
     public void setCode(int code) {
         this.code = code;
     }

@@ -33,6 +33,12 @@ public class KatRewriteConfiguration extends HttpConfigurationProvider {
                 .addRule(Join.path("/api/testExcel").to("/pages/admin/testExcel.xhtml").withInboundCorrection())
                 .addRule(Join.path("/student").to("/pages/admin/Student.xhtml").withInboundCorrection())
                 .addRule(Join.path("/import").to("/pages/admin/import.xhtml").withInboundCorrection())
+                .addRule(Join.path("/student_add").to("/pages/admin/studentAdd.xhtml").withInboundCorrection())
+                .addRule(Join.path("/student_edit").to("/pages/admin/studentEdit.xhtml").withInboundCorrection())
+                .addRule(Join.path("/lecturers_edit").to("/pages/admin/lecturersEdit.xhtml").withInboundCorrection())
+                .addRule(Join.path("/lecturers").to("/pages/admin/lecturers.xhtml").withInboundCorrection())
+                .addRule(Join.path("/lecturers_add").to("/pages/admin/lecturersAdd.xhtml").withInboundCorrection())
+                .addRule(Join.path("/all_Servey").to("/pages/admin/all_Servey.xhtml").withInboundCorrection())
                 ;
     }
 }

@@ -4,130 +4,42 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
 <f:view>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="navbar navbar-expand-md navbar-light"  style="background-color: #9A9BFE">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHead">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div id="navbarHead" class="collapse navbar-collapse">
-                        <ul class="navbar-nav">
-                            <li class="nav-item slove">
-                                <a href="/home/datdat/Documents/All_servey.html" class="nav-link">Trang chu</a>
+    <h:form>
+        <div class="task">
+            <div class="navbar navbar-expand-md navbar-inverse" >
+                <div class="container-fluid" style="align-items: left">
+                    <ul class="nav navbar-nav" style="align-items: left">
+                        <li class="${home.currentPage == 'all_Servey' ? 'active' : '' }">
+                            <h:commandLink actionListener="#{home.changePage('all_Servey')}">
+                                <span class="fa fa-th"></span> Trang chủ
+                            </h:commandLink>
+                        </li>
+
+                        <li class="${home.currentPage == 'student' ? 'active' : '' }">
+                            <h:commandLink actionListener="#{home.changePage('student')}">
+                                <span class="fa fa-list"></span> Sinh viên
+                            </h:commandLink>
+                        </li>
+                        <li class="${home.currentPage == 'lecturers' ? 'active' : '' }">
+                            <h:commandLink actionListener="#{home.changePage('lecturers')}">
+                                <span class="fa fa-user"></span> Giảng viên
+                            </h:commandLink>
+                        </li>
+                        <c:if test="#{login.role ==0}">
+                            <li class="${home.currentPage == 'admin' ? 'active' : '' }">
+                                <h:commandLink actionListener="#{home.changePage('admin')}">
+                                    <span class="fa fa-list"></span> Admin
+                                </h:commandLink>
                             </li>
-                            <li class="nav-item active">
-                                <a href="/home/datdat/Documents/Sinh_vien.html" class="nav-link">Sinh vien</a>
-                            </li>
-                            <li class="nav-item slove">
-                                <a href="/home/datdat/Documents/giang_vien.html" class="nav-link">Giang vien</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="btn-group" style="margin-left: 860px;">
-                      <span>
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#newTeacher" style="margin-right: 5px;">
-                        New teacher
-                        </button>
-                      </span>
-                        <span><button type="button" class="btn btn-info">Generate</button></span>
-                    </div>
-                    <div id="newTeacher" class="modal fade" role="dialog">
-                        <div class="modal-dialog modal-lg" style="margin: 170px auto">
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Tao tai khoan giang vien moi</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="form1" method="post" action="/post-feedback">
-                                        <div class="container" id="login">
-                                            <div class="form-group row">
-                                                <label for="name" class="col-md-2 col-form-label">Ho ten:</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" id="name" name="name" required="required" placeholder="Nhap ho ten"/>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <span style="color:red" id="er_name"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="birthday" class="col-md-2 col-form-label">Ngay sinh:</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" id="birthday" name="birthday"/>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <span style="color:red" id="er_birthday"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="sex" class="col-md-2 col-form-label">Gioi tinh:</label>
-                                                <div class="col-md-auto">
-                                                    <select id="sex" class="form-control">
-                                                        <option>Nam</option>
-                                                        <option>Nu</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-8">&nbsp;</div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="email" class="col-md-2 col-form-label">Email:</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" id="email" name="email"/>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <span style="color:red" id="er_email"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="username" class="col-md-2 col-form-label">Ten tai khoan:</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" id="username" name="username"/>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <span style="color:red" id="er_username"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="password" class="col-md-2 col-form-label">Mat khau:</label>
-                                                <div class="col-md-6">
-                                                    <input type="password" class="form-control" id="password" name="password"/>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <span style="color:red" id="er_password"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="en_password" class="col-md-2 col-form-label">Nhap lai mat khau:</label>
-                                                <div class="col-md-6">
-                                                    <input type="password" class="form-control" id="en_password"/>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <span style="color:red" id="er_en_password"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="col-md 2">&nbsp;</div>
-                                                <div class="col-md-10">
-                                                    <button type="button" id="chap_nhan" class="btn btn-primary">Chap nhan</button>
-                                                    <a href="/"><button type="button" class="btn btn-danger">Quay lai</button></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </c:if>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
+    </h:form>
 </f:view>
 </html>

@@ -13,6 +13,7 @@ public interface UserService {
     UserDto findByEmail(String email);
     UserDto findByUserName(String username);
     void save(UserDto userDto);
+    void add(UserDto userDto);
     void save (UserEntity userEntity);
     void delete(Integer userId);
 }

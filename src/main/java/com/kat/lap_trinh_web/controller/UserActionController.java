@@ -12,12 +12,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import javax.annotation.PostConstruct;
 //import javax.inject.Named;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,12 +33,15 @@ import java.util.List;
 @RestController
 @RequestMapping
 public class UserActionController  extends MessageErrorConst {
-    UserDto userDto;
-    UserDto userRequestDto;
-    List<UserDto> lecturersDtoList;
-    List<UserDto> studentDtoList;
-    List<UserDto> list;
-    String idRequest;
+    private UserDto userDto;
+    private UserDto userRequestDto;
+    private UserDto lecturersToAdd;
+    private UserDto studentToAdd;
+    private int idToDelete;
+    private String idRequest;
+    private List<UserDto> lecturersDtoList;
+    private List<UserDto> studentDtoList;
+    private List<UserDto> list;
     ServletContext servletContext;
 
     @Autowired
@@ -45,7 +52,10 @@ public class UserActionController  extends MessageErrorConst {
 
     @PostConstruct
     public void init() {
-        studentDtoList = findAllStudent();
+        lecturersDtoList = findAllLecturers();
+        studentToAdd = new UserDto();
+        lecturersToAdd = new UserDto();
+
     }
 
     public List<UserDto> findAllLecturers(){
@@ -57,19 +67,65 @@ public class UserActionController  extends MessageErrorConst {
     }
 
     public UserDto findById(int id){
-        return this.userDto = userService.findById(id);
+         this.userRequestDto = userService.findById(id);
+         return userRequestDto;
+
+    }
+    public UserDto findById(){
+        System.out.println(this.idToDelete);
+        return this.userDto = userService.findById(this.idToDelete);
     }
 
     public UserDto findByUserName(String username){
         return userService.findByUserName(username);
     }
 
+    public UserDto findByUserName(){
+        return userService.findByUserName(this.idRequest);
+    }
+
+    public void addLecturers() throws IOException{
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+//            if(validate(lecturersToAdd)) {
+                lecturersToAdd.setUserType(1);
+                userService.add(lecturersToAdd);
+
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/student");
+//            }
+        }catch (Exception e){
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", " This Lecturers already exist"));
+        }
+    }
+    public void addStudent() throws IOException{
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+//            if(validate(studentToAdd)) {
+            studentToAdd.setUserType(2);
+            userService.add(studentToAdd);
+
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/student");
+//            }
+        }catch (Exception e){
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", " This Lecturers already exist"));
+        }
+    }
     public void deleteLecturers() {
-        userService.delete(userRequestDto.getUserId());
+        userService.delete(this.idToDelete);
         Iterator<UserDto> i = lecturersDtoList.iterator();
         while(i.hasNext()) {
             UserDto s = i.next(); // must be called before you can call i.remove()
-            if(s.getEmail() == this.idRequest) {
+            if(s.getUserId() == this.idToDelete) {
+                i.remove();
+            }
+        }
+    }
+    public void deleteStudent() {
+        userService.delete(this.idToDelete);
+        Iterator<UserDto> i = studentDtoList.iterator();
+        while(i.hasNext()) {
+            UserDto s = i.next(); // must be called before you can call i.remove()
+            if(s.getUserId() == this.idToDelete) {
                 i.remove();
             }
         }
@@ -96,7 +152,7 @@ public class UserActionController  extends MessageErrorConst {
         this.list = userService.findAll();
         int size = list.size();
         // Lecturers.Permission = 3
-        List<UserEntity> list = fileUtil.ExcelHelper(file,size,3);
+        List<UserEntity> list = fileUtil.ExcelHelper(file,size,1);
         for(int i=0;i<list.size();i++){
             userService.save(list.get(i));
         }
@@ -117,7 +173,7 @@ public class UserActionController  extends MessageErrorConst {
     }
 
     //Check validate
-    private boolean validate() {
+    private boolean validate(UserDto userRequestDto) {
         boolean isValid = true;
         if(userRequestDto.getEmail() == null || userRequestDto.getEmail().equals("")) {
             isValid = false;
@@ -209,4 +265,37 @@ public class UserActionController  extends MessageErrorConst {
     public void setStudentDtoList(List<UserDto> studentDtoList) {
         this.studentDtoList = studentDtoList;
     }
+
+    public UserDto getLecturersToAdd() {
+        return lecturersToAdd;
+    }
+
+    public void setLecturersToAdd(UserDto lecturersToAdd) {
+        this.lecturersToAdd = lecturersToAdd;
+    }
+
+    public List<UserDto> getLecturersDtoList() {
+        return lecturersDtoList;
+    }
+
+    public void setLecturersDtoList(List<UserDto> lecturersDtoList) {
+        this.lecturersDtoList = lecturersDtoList;
+    }
+
+    public int getIdToDelete() {
+        return idToDelete;
+    }
+
+    public void setIdToDelete(int idToDelete) {
+        this.idToDelete = idToDelete;
+    }
+
+    public UserDto getStudentToAdd() {
+        return studentToAdd;
+    }
+
+    public void setStudentToAdd(UserDto studentToAdd) {
+        this.studentToAdd = studentToAdd;
+    }
+
 }

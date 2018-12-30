@@ -13,5 +13,6 @@ public interface UserRepo {
     UserEntity findByEmail(String email);
     UserEntity findByUserName(String username);
     void save(UserEntity userEntity);
+    void add(UserEntity userEntity);
     void delete(UserEntity userEntity);
 }

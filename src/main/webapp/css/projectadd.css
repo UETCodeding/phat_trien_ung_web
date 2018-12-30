@@ -1,0 +1,11 @@
+#projectadd-content-container {
+    margin-top: 100px;
+}
+
+#buttons-group {
+    margin-top: 50px
+}
+
+#buttons-group > .btn {
+    margin-left: 10px;
+}

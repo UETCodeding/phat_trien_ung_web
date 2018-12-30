@@ -15,6 +15,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,12 +85,21 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
+    @Transactional
     public void save(UserEntity userEntity) {
         userEntity.setLastModified(new Timestamp(new Date().getTime()));
         entityManager.merge(userEntity);
     }
 
     @Override
+    @Transactional
+    public void add(UserEntity userEntity) {
+        userEntity.setLastModified(new Timestamp(new Date().getTime()));
+        entityManager.merge(userEntity);
+    }
+
+    @Override
+    @Transactional
     public void delete(UserEntity userEntity) {
         entityManager.remove(userEntity);
     }

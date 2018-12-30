@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -13,17 +14,24 @@ import java.io.IOException;
 import java.io.Serializable;
 
 @Named("home")
-@ConversationScoped
+@SessionScoped
 public class HomeController implements Serializable {
     private String currentTemplate;
+    private String currentPage;
 
     @Inject AuthorityController authorityController;
+    @Inject SessionController sessionController;
 
     @Autowired AuthorityService authorityService;
 
     @PostConstruct
     private void init(){
 
+    }
+
+    public void changePage(String pageName) throws IOException {
+        selectPage(pageName);
+        currentPage = pageName;
     }
 
     public void selectPage(String page) throws IOException {
@@ -38,7 +46,7 @@ public class HomeController implements Serializable {
         if(authorityController.getLoggedUser() == null){
             FacesContext.getCurrentInstance().getExternalContext().dispatch("/login");
         }else{
-            FacesContext.getCurrentInstance().getExternalContext().dispatch("/testExcel");
+            changePage("all_Servey");
         }
     }
 
@@ -57,5 +65,13 @@ public class HomeController implements Serializable {
 
     public void setCurrentTemplate(String currentTemplate) {
         this.currentTemplate = currentTemplate;
+    }
+
+    public String getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(String currentPage) {
+        this.currentPage = currentPage;
     }
 }

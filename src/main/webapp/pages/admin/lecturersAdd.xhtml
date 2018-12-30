@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+>
+<h:body>
+    <ui:composition template="../../layouts/layout_home.xhtml">
+        <ui:define name="content">
+            <script type="text/javascript">
+
+                function displayError(id, errorMessage){
+                    $('#'+id).parent().addClass('on-error');
+                    $('#'+id+'Error').html(errorMessage);
+                }
+                function hiddenError(id){
+                    $('#'+id).parent().removeClass('on-error');
+                    $('#'+id+'Error').html('');
+                }
+            </script>
+            <div class="content-wrapper">
+                <div class="container-fluid">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h3>New Teacher</h3>
+                            </div>
+                        </div>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <label>Teacher Code<span class="data-required">*</span></label>
+                                <h:inputText styleClass="form-control" value="#{user.lecturersToAdd.code}" >
+                                </h:inputText>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <label>Teacher Name<span class="data-required">*</span></label>
+                                <h:inputText id="txtStudentName" styleClass="form-control" value="#{user.lecturersToAdd.fullName}">
+                                </h:inputText>
+                                <h:outputLabel id="txtStudentNameError" value="" />
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <label>Teacher Email<span class="data-required">*</span></label>
+                                <h:inputText id="txtStudentEmail" styleClass="form-control" value="#{user.lecturersToAdd.email}" >
+                                </h:inputText>
+                                <h:outputLabel id="txtStudentEmailError" value="" />
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <label>Birthday<span class="data-required">*</span></label>
+                                <h:inputText id="txtBirthday" styleClass="form-control" value="#{user.lecturersToAdd.birthday}" >
+                                </h:inputText>
+                                <h:outputLabel id="txtBirthdayError" value="" />
+                            </div>
+                            <br></br>
+                            <br></br>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-md-5"></div>
+                            <div id="buttons-group" class="text-center" style="margin-left: 50px;">
+
+                                <a class="btn btn-danger " href="lecturers">Cancel</a>
+                                <p:commandButton styleClass="btn btn-success" style="width: 70px; height: 34px;margin-left: 10px;padding-left: 7px; " process="main" update="main" actionListener="#{user.addLecturers()}" value="Submit"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
